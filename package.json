@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node dist/server.js",
     "dev": "tsc-watch --onSuccess \"node dist/server.js\"",
-    "build": "tsc"
+    "build": "tsc",
+    "style:fix": "prettier --write 'src/**/*.ts' 'test/**/*.ts'"
   },
   "dependencies": {
     "bcrypt": "^4.0.0",
@@ -16,7 +17,8 @@
     "mongoose": "^5.9.1",
     "morgan": "^1.9.1",
     "passport": "^0.4.1",
-    "passport-jwt": "^4.0.0"
+    "passport-jwt": "^4.0.0",
+    "prettier": "^2.4.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",

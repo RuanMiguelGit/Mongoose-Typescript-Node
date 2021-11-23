@@ -12,8 +12,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.singIn = exports.singUp = void 0;
+exports.UserIsValid = exports.singIn = exports.singUp = void 0;
 const User_1 = __importDefault(require("../model/User"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const config_1 = __importDefault(require("../config/config"));
+function createToken(user) {
+    return jsonwebtoken_1.default.sign({ id: user.id, email: user.email }, config_1.default.jwtSecret, {
+        expiresIn: 86400
+    });
+}
 const singUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     if (!email || !password)
@@ -26,7 +33,25 @@ const singUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     return res.status(201).json(newUser);
 });
 exports.singUp = singUp;
-const singIn = (req, res) => {
-    return res.send('adas');
-};
+const singIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, password } = req.body;
+    if (!email || !password)
+        return res.status(400).json({ message: 'Erro campos invalidos' });
+    const user = yield User_1.default.findOne({ email: email });
+    if (!user)
+        return res.status(400).json({ message: 'Usuario não existe' });
+    const isMatch = yield user.comparePassword(password);
+    if (isMatch)
+        return res.status(200).json({
+            message: "Bem Vindo",
+            tokem: createToken(user)
+        });
+    return res.status(400).json({
+        message: "Dados de acesso inválidos"
+    });
+});
 exports.singIn = singIn;
+const UserIsValid = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    return res.send('I am a secure route validated with passport.js');
+});
+exports.UserIsValid = UserIsValid;
