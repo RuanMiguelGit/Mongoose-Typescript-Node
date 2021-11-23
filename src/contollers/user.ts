@@ -36,3 +36,7 @@ export const singIn = async (req:Request, res:Response) => {
         message:"Dados de acesso inválidos"
     })
 }
+
+export const UserIsValid = async (req:Request, res:Response): Promise<Response> => {
+return res.send('I am a secure route validated with passport.js')
+}
